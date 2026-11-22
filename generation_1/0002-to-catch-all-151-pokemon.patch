@@ -1,0 +1,64 @@
+From 6d1c1eae47d2984eee43c5c4a2fcdf9e63808667 Mon Sep 17 00:00:00 2001
+From: devinizz <p17351988c@live.com>
+Date: Sun, 22 Nov 2026 15:17:35 +0800
+Subject: [PATCH 2/3] to catch all 151 pokemon
+
+---
+ data/wild/maps/CeruleanCave1F.asm  | 10 +++++-----
+ data/wild/maps/CeruleanCave2F.asm  |  6 +++---
+ data/wild/maps/CeruleanCaveB1F.asm |  2 +-
+ 3 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/data/wild/maps/CeruleanCave1F.asm b/data/wild/maps/CeruleanCave1F.asm
+index 243f88bb..d8c77f21 100644
+--- a/data/wild/maps/CeruleanCave1F.asm
++++ b/data/wild/maps/CeruleanCave1F.asm
+@@ -1,10 +1,10 @@
+ CeruleanCave1FWildMons:
+ 	def_grass_wildmons 10 ; encounter rate
+-	db 46, GOLBAT
+-	db 46, HYPNO
+-	db 46, MAGNETON
+-	db 49, DODRIO
+-	db 49, VENOMOTH
++	db  5, HITMONLEE
++	db  5, HITMONCHAN
++	db  5, EEVEE
++	db  5, OMANYTE
++	db  5, KABUTO
+ IF DEF(_RED)
+ 	db 52, ARBOK
+ ENDC
+diff --git a/data/wild/maps/CeruleanCave2F.asm b/data/wild/maps/CeruleanCave2F.asm
+index 5366fa58..487a8e7c 100644
+--- a/data/wild/maps/CeruleanCave2F.asm
++++ b/data/wild/maps/CeruleanCave2F.asm
+@@ -3,9 +3,9 @@ CeruleanCave2FWildMons:
+ 	db 51, DODRIO
+ 	db 51, VENOMOTH
+ 	db 51, KADABRA
+-	db 52, RHYDON
+-	db 52, MAROWAK
+-	db 52, ELECTRODE
++	db  5, BULBASAUR
++	db  5, CHARMANDER
++	db  5, SQUIRTLE
+ 	db 56, CHANSEY
+ 	db 54, WIGGLYTUFF
+ 	db 55, DITTO
+diff --git a/data/wild/maps/CeruleanCaveB1F.asm b/data/wild/maps/CeruleanCaveB1F.asm
+index a1889041..2b70c62d 100644
+--- a/data/wild/maps/CeruleanCaveB1F.asm
++++ b/data/wild/maps/CeruleanCaveB1F.asm
+@@ -12,7 +12,7 @@ ENDC
+ IF DEF(_BLUE)
+ 	db 57, SANDSLASH
+ ENDC
+-	db 65, DITTO
++	db  5, MEW
+ 	db 63, DITTO
+ 	db 67, DITTO
+ 	end_grass_wildmons
+-- 
+2.55.0
+

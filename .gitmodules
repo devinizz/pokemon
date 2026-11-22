@@ -1,0 +1,6 @@
+[submodule "generation_1/pokered"]
+	path = generation_1/pokered
+	url = https://github.com/pret/pokered.git
+[submodule "rgbds"]
+	path = rgbds
+	url = https://github.com/gbdev/rgbds.git
