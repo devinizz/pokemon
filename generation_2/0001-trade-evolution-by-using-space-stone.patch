@@ -1,0 +1,187 @@
+From 4831a099da2a2c56936d80ebbff79f340d5b2e58 Mon Sep 17 00:00:00 2001
+From: devinizz <p17351988c@live.com>
+Date: Sun, 22 Nov 2026 15:24:03 +0800
+Subject: [PATCH 1/3] trade evolution by using space stone
+
+---
+ constants/item_constants.asm  | 2 +-
+ data/items/attributes.asm     | 4 ++--
+ data/items/descriptions.asm   | 7 ++++---
+ data/items/marts.asm          | 6 ++++--
+ data/items/names.asm          | 2 +-
+ engine/items/item_effects.asm | 2 +-
+ engine/pokemon/evolve.asm     | 9 ++++++++-
+ engine/pokemon/party_menu.asm | 9 +++++++++
+ 8 files changed, 30 insertions(+), 11 deletions(-)
+
+diff --git a/constants/item_constants.asm b/constants/item_constants.asm
+index 9774b0cc2..74b2b67de 100644
+--- a/constants/item_constants.asm
++++ b/constants/item_constants.asm
+@@ -176,7 +176,7 @@
+ 	const GORGEOUS_BOX ; a8
+ 	const SUN_STONE    ; a9
+ 	const POLKADOT_BOW ; aa
+-	const ITEM_AB      ; ab
++	const SPACE_STONE  ; ab
+ 	const UP_GRADE     ; ac
+ 	const BERRY        ; ad
+ 	const GOLD_BERRY   ; ae
+diff --git a/data/items/attributes.asm b/data/items/attributes.asm
+index 810d95356..b2f80079e 100644
+--- a/data/items/attributes.asm
++++ b/data/items/attributes.asm
+@@ -349,8 +349,8 @@ ItemAttributes:
+ 	item_attribute 2100, HELD_NONE, 0, CANT_SELECT, ITEM, ITEMMENU_PARTY, ITEMMENU_NOUSE
+ ; POLKADOT_BOW
+ 	item_attribute 100, HELD_NORMAL_BOOST, 10, CANT_SELECT, ITEM, ITEMMENU_NOUSE, ITEMMENU_NOUSE
+-; ITEM_AB
+-	item_attribute $9999, HELD_NONE, 0, NO_LIMITS, ITEM, ITEMMENU_NOUSE, ITEMMENU_NOUSE
++; SPACE_STONE
++	item_attribute 2100, HELD_NONE, 0, CANT_SELECT, ITEM, ITEMMENU_PARTY, ITEMMENU_NOUSE
+ ; UP_GRADE
+ 	item_attribute 2100, HELD_NONE, 0, CANT_SELECT, ITEM, ITEMMENU_NOUSE, ITEMMENU_NOUSE
+ ; BERRY
+diff --git a/data/items/descriptions.asm b/data/items/descriptions.asm
+index 864f1073c..cf5779bdb 100644
+--- a/data/items/descriptions.asm
++++ b/data/items/descriptions.asm
+@@ -171,7 +171,7 @@ ItemDescriptions:
+ 	dw GorgeousBoxDesc
+ 	dw SunStoneDesc
+ 	dw PolkadotBowDesc
+-	dw TeruSama22Desc
++	dw SpaceStoneDesc
+ 	dw UpGradeDesc
+ 	dw BerryDesc
+ 	dw GoldBerryDesc
+@@ -912,8 +912,9 @@ PolkadotBowDesc:
+ 	db   "Powers up normal-"
+ 	next "type moves. (HOLD)@"
+ 
+-TeruSama22Desc:
+-	db   "?@"
++SpaceStoneDesc:
++	db   "Evolves certain"
++	next "kinds of #MON.@"
+ 
+ UpGradeDesc:
+ 	db   "A mysterious box"
+diff --git a/data/items/marts.asm b/data/items/marts.asm
+index a8762680c..3b9d95689 100644
+--- a/data/items/marts.asm
++++ b/data/items/marts.asm
+@@ -125,12 +125,13 @@ MartGoldenrod3F:
+ 	db -1 ; end
+ 
+ MartGoldenrod4F:
+-	db 5 ; # items
++	db 6 ; # items
+ 	db PROTEIN
+ 	db IRON
+ 	db CARBOS
+ 	db CALCIUM
+ 	db HP_UP
++	db SPACE_STONE
+ 	db -1 ; end
+ 
+ MartGoldenrod5F1:
+@@ -329,12 +330,13 @@ MartCeladon4F:
+ 	db -1 ; end
+ 
+ MartCeladon5F1:
+-	db 5 ; # items
++	db 6 ; # items
+ 	db HP_UP
+ 	db PROTEIN
+ 	db IRON
+ 	db CARBOS
+ 	db CALCIUM
++	db SPACE_STONE
+ 	db -1 ; end
+ 
+ MartCeladon5F2:
+diff --git a/data/items/names.asm b/data/items/names.asm
+index 23548636b..77f88b2d8 100644
+--- a/data/items/names.asm
++++ b/data/items/names.asm
+@@ -170,7 +170,7 @@ ItemNames::
+ 	li "GORGEOUS BOX"
+ 	li "SUN STONE"
+ 	li "POLKADOT BOW"
+-	li "TERU-SAMA"
++	li "SPACE STONE"
+ 	li "UP-GRADE"
+ 	li "BERRY"
+ 	li "GOLD BERRY"
+diff --git a/engine/items/item_effects.asm b/engine/items/item_effects.asm
+index cc388bcb8..83c0ca1db 100644
+--- a/engine/items/item_effects.asm
++++ b/engine/items/item_effects.asm
+@@ -184,7 +184,7 @@ ItemEffects:
+ 	dw GorgeousBoxEffect   ; GORGEOUS_BOX
+ 	dw EvoStoneEffect      ; SUN_STONE
+ 	dw NoEffect            ; POLKADOT_BOW
+-	dw NoEffect            ; ITEM_AB
++	dw EvoStoneEffect      ; SPACE_STONE
+ 	dw NoEffect            ; UP_GRADE
+ 	dw RestoreHPEffect     ; BERRY
+ 	dw RestoreHPEffect     ; GOLD_BERRY
+diff --git a/engine/pokemon/evolve.asm b/engine/pokemon/evolve.asm
+index b2073653d..5f6cec798 100644
+--- a/engine/pokemon/evolve.asm
++++ b/engine/pokemon/evolve.asm
+@@ -144,8 +144,9 @@ EvolveAfterBattle_MasterLoop:
+ .trade
+ 	ld a, [wLinkMode]
+ 	and a
+-	jp z, .dont_evolve_2
++	jp z, .check_space_stone
+ 
++.continue_trade
+ 	call IsMonHoldingEverstone
+ 	jp z, .dont_evolve_2
+ 
+@@ -319,6 +320,12 @@ EvolveAfterBattle_MasterLoop:
+ 	ld h, d
+ 	jp EvolveAfterBattle_MasterLoop
+ 
++.check_space_stone
++	ld a, [wCurItem]
++	cp SPACE_STONE
++	jp nz, .dont_evolve_2
++	jp .continue_trade
++
+ .dont_evolve_1
+ 	inc hl
+ .dont_evolve_2
+diff --git a/engine/pokemon/party_menu.asm b/engine/pokemon/party_menu.asm
+index 0de114a81..c279b5991 100644
+--- a/engine/pokemon/party_menu.asm
++++ b/engine/pokemon/party_menu.asm
+@@ -406,6 +406,8 @@ PlacePartyMonEvoStoneCompatibility:
+ 	jr z, .nope
+ 	inc hl
+ 	inc hl
++	cp EVOLVE_TRADE
++	jr z, .checkSpaceStone
+ 	cp EVOLVE_ITEM
+ 	jr nz, .loop2
+ 	dec hl
+@@ -418,6 +420,13 @@ PlacePartyMonEvoStoneCompatibility:
+ 	ld de, .string_able
+ 	ret
+ 
++.checkSpaceStone
++	ld a, [wCurItem]
++	cp SPACE_STONE
++	jr nz, .loop2
++	ld de, .string_able
++	ret
++
+ .nope
+ 	ld de, .string_not_able
+ 	ret
+-- 
+2.55.0
+

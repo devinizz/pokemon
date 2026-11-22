@@ -1,0 +1,40 @@
+From 05bfe2c20d918324fbf0df73e10d4e21885ac582 Mon Sep 17 00:00:00 2001
+From: devinizz <p17351988c@live.com>
+Date: Sun, 22 Nov 2026 15:24:23 +0800
+Subject: [PATCH 2/3] enable celebi event
+
+---
+ maps/GoldenrodPokecenter1F.asm | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/maps/GoldenrodPokecenter1F.asm b/maps/GoldenrodPokecenter1F.asm
+index 400ef9fbb..f3b7f197a 100644
+--- a/maps/GoldenrodPokecenter1F.asm
++++ b/maps/GoldenrodPokecenter1F.asm
+@@ -15,9 +15,8 @@ GoldenrodPokecenter1FNurseScript:
+ 	jumpstd PokecenterNurseScript
+ 
+ GoldenrodPokecenter1F_GSBallSceneLeft:
+-	setval BATTLETOWERACTION_GSBALL
+-	special BattleTowerAction
+-	ifequal GS_BALL_AVAILABLE, .gsball
++	checkevent EVENT_BEAT_ELITE_FOUR
++	iftrue .gsball
+ 	end
+ 
+ .gsball
+@@ -47,9 +46,8 @@ GoldenrodPokecenter1F_GSBallSceneLeft:
+ 	end
+ 
+ GoldenrodPokecenter1F_GSBallSceneRight:
+-	setval BATTLETOWERACTION_GSBALL
+-	special BattleTowerAction
+-	ifequal GS_BALL_AVAILABLE, .gsball
++	checkevent EVENT_BEAT_ELITE_FOUR
++	iftrue .gsball
+ 	end
+ 
+ .gsball
+-- 
+2.55.0
+

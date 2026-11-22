@@ -4,3 +4,6 @@
 [submodule "rgbds"]
 	path = rgbds
 	url = https://github.com/gbdev/rgbds.git
+[submodule "generation_2/pokecrystal"]
+	path = generation_2/pokecrystal
+	url = https://github.com/pret/pokecrystal.git
