@@ -13,3 +13,6 @@
 [submodule "agbcc"]
 	path = agbcc
 	url = https://github.com/pret/agbcc.git
+[submodule "generation_4/pokeplatinum"]
+	path = generation_4/pokeplatinum
+	url = https://github.com/pret/pokeplatinum.git
