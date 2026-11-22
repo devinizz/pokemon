@@ -1,0 +1,128 @@
+From 11e682a54350a26aea6bcdddfa5a6dc5cd2af245 Mon Sep 17 00:00:00 2001
+From: devinizz <p17351988c@live.com>
+Date: Sun, 22 Nov 2026 15:53:51 +0800
+Subject: [PATCH 3/3] to go to other island
+
+---
+ .../Route119_WeatherInstitute_2F/scripts.inc  | 94 ++++++++++++++++++-
+ 1 file changed, 93 insertions(+), 1 deletion(-)
+
+diff --git a/data/maps/Route119_WeatherInstitute_2F/scripts.inc b/data/maps/Route119_WeatherInstitute_2F/scripts.inc
+index 7435e6666..c9f38dd92 100644
+--- a/data/maps/Route119_WeatherInstitute_2F/scripts.inc
++++ b/data/maps/Route119_WeatherInstitute_2F/scripts.inc
+@@ -130,7 +130,7 @@ Route119_WeatherInstitute_2F_EventScript_TryStartAbnormalWeather::
+ 	setvar VAR_0x8004, 0
+ 	call_if_set FLAG_DEFEATED_KYOGRE, Route119_WeatherInstitute_2F_EventScript_LegendaryDefeated
+ 	call_if_set FLAG_DEFEATED_GROUDON, Route119_WeatherInstitute_2F_EventScript_LegendaryDefeated
+-	goto_if_eq VAR_0x8004, 2, Route119_WeatherInstitute_2F_EventScript_NoAbnormalWeather  @ Both defeated
++	goto_if_eq VAR_0x8004, 2, GiveOldSeaMap  @ Both defeated
+ 	call_if_unset FLAG_TEMP_2, Route119_WeatherInstitute_2F_EventScript_CreateAbnormalWeather
+ 	specialvar VAR_RESULT, GetAbnormalWeatherMapNameAndType
+ 	goto_if_eq VAR_RESULT, 1, Route119_WeatherInstitute_2F_EventScript_KyogreWeather
+@@ -157,6 +157,80 @@ Route119_WeatherInstitute_2F_EventScript_NoAbnormalWeather::
+ 	release
+ 	end
+ 
++GiveOldSeaMap::
++	goto_if_set FLAG_CAUGHT_MEW, GiveMysticTicket
++	goto_if_set FLAG_RECEIVED_OLD_SEA_MAP, Route119_WeatherInstitute_2F_EventScript_NoAbnormalWeather
++	checkitem ITEM_OLD_SEA_MAP
++	goto_if_eq VAR_RESULT, TRUE, Route119_WeatherInstitute_2F_EventScript_NoAbnormalWeather
++	message sText_MysteryGiftForYou
++	waitmessage
++	waitbuttonpress
++	checkitemspace ITEM_OLD_SEA_MAP
++	goto_if_eq VAR_RESULT, FALSE, NoBagSpace
++	giveitem ITEM_OLD_SEA_MAP
++	setflag FLAG_ENABLE_SHIP_FARAWAY_ISLAND
++	setflag FLAG_RECEIVED_OLD_SEA_MAP
++	message sText_MysteryGiftUseAtPort
++	waitmessage
++	waitbuttonpress
++	release
++	end
++
++GiveMysticTicket::
++	goto_if_set FLAG_CAUGHT_LUGIA, GiveAuroraTicket
++	goto_if_set FLAG_CAUGHT_HO_OH, GiveAuroraTicket
++	goto_if_set FLAG_RECEIVED_MYSTIC_TICKET, Route119_WeatherInstitute_2F_EventScript_NoAbnormalWeather
++	checkitem ITEM_MYSTIC_TICKET
++	goto_if_eq VAR_RESULT, TRUE, Route119_WeatherInstitute_2F_EventScript_NoAbnormalWeather
++	message sText_MysteryGiftForYou
++	waitmessage
++	waitbuttonpress
++	checkitemspace ITEM_MYSTIC_TICKET
++	goto_if_eq VAR_RESULT, FALSE, NoBagSpace
++	giveitem ITEM_MYSTIC_TICKET
++	setflag FLAG_ENABLE_SHIP_NAVEL_ROCK
++	setflag FLAG_RECEIVED_MYSTIC_TICKET
++	message sText_MysteryGiftUseAtPort
++	waitmessage
++	waitbuttonpress
++	release
++	end
++
++GiveAuroraTicket::
++	goto_if_set FLAG_BATTLED_DEOXYS, Distribute_Eon_Ticket
++	goto_if_set FLAG_RECEIVED_AURORA_TICKET, Route119_WeatherInstitute_2F_EventScript_NoAbnormalWeather
++	checkitem ITEM_AURORA_TICKET
++	goto_if_eq VAR_RESULT, TRUE, Route119_WeatherInstitute_2F_EventScript_NoAbnormalWeather
++	message sText_MysteryGiftForYou
++	waitmessage
++	waitbuttonpress
++	checkitemspace ITEM_AURORA_TICKET
++	goto_if_eq VAR_RESULT, FALSE, NoBagSpace
++	giveitem ITEM_AURORA_TICKET
++	setflag FLAG_ENABLE_SHIP_BIRTH_ISLAND
++	setflag FLAG_RECEIVED_AURORA_TICKET
++	message sText_MysteryGiftUseAtPort
++	waitmessage
++	waitbuttonpress
++	release
++	end
++
++Distribute_Eon_Ticket:
++	goto_if_set FLAG_ENABLE_SHIP_SOUTHERN_ISLAND, Route119_WeatherInstitute_2F_EventScript_NoAbnormalWeather
++	setvar VAR_DISTRIBUTE_EON_TICKET, 1
++	message sText_GotoPokemonCenter2F
++	waitmessage
++	waitbuttonpress
++	release
++	end
++
++NoBagSpace::
++	message sText_MysteryGiftBagFull
++	waitmessage
++	waitbuttonpress
++	release
++	end
++
+ Route119_WeatherInstitute_2F_Movement_GruntApproachShelly:
+ 	walk_fast_left
+ 	walk_fast_left
+@@ -320,3 +394,21 @@ Route119_WeatherInstitute_2F_Text_NoAbnormalWeather:
+ 	.string "The occasional rainfall is a blessing,\n"
+ 	.string "really.$"
+ 
++sText_MysteryGiftForYou:
++	.string "Thank you for helping us.\p"
++	.string "I'll give you something in return.$"
++
++sText_MysteryGiftUseAtPort::
++	.string "It appears to be for use at the\n"
++	.string "LILYCOVE CITY port.\p"
++	.string "Why not give it a try and see what\n"
++	.string "it is about?$"
++
++sText_MysteryGiftBagFull::
++	.string "Oh, I'm sorry.\n"
++	.string "Your BAG's KEY ITEMS POCKET is full.$"
++
++sText_GotoPokemonCenter2F::
++	.string "Thank you for helping us.\p"
++	.string "Please go to the Pokémon Center 2F\n"
++	.string "to receive the Eon Ticket.$"
+-- 
+2.55.0
+

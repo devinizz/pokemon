@@ -7,3 +7,9 @@
 [submodule "generation_2/pokecrystal"]
 	path = generation_2/pokecrystal
 	url = https://github.com/pret/pokecrystal.git
+[submodule "generation_3/pokeemerald"]
+	path = generation_3/pokeemerald
+	url = https://github.com/pret/pokeemerald.git
+[submodule "agbcc"]
+	path = agbcc
+	url = https://github.com/pret/agbcc.git

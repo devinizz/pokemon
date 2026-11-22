@@ -1,0 +1,41 @@
+From daf048d81125050ef83f1b3abec8d6ede20a7109 Mon Sep 17 00:00:00 2001
+From: devinizz <p17351988c@live.com>
+Date: Sun, 22 Nov 2026 15:56:47 +0800
+Subject: [PATCH] shiny
+
+---
+ src/pokemon.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/src/pokemon.c b/src/pokemon.c
+index 150f3cdb0..9f185964b 100644
+--- a/src/pokemon.c
++++ b/src/pokemon.c
+@@ -2217,8 +2217,6 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV,
+     else
+         personality = Random32();
+ 
+-    SetBoxMonData(boxMon, MON_DATA_PERSONALITY, &personality);
+-
+     // Determine original trainer ID
+     if (otIdType == OT_ID_RANDOM_NO_SHINY)
+     {
+@@ -2241,6 +2239,15 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV,
+               | (gSaveBlock2Ptr->playerTrainerId[2] << 16)
+               | (gSaveBlock2Ptr->playerTrainerId[3] << 24);
+     }
++    {
++        u8 nature = GetNatureFromPersonality(personality);
++        do {
++            personality = Random32();
++            personality = ((((Random() % SHINY_ODDS) ^ (HIHALF(value) ^ LOHALF(value))) ^ LOHALF(personality)) << 16) | LOHALF(personality);
++        } while (nature != GetNatureFromPersonality(personality));
++    }
++
++    SetBoxMonData(boxMon, MON_DATA_PERSONALITY, &personality);
+ 
+     SetBoxMonData(boxMon, MON_DATA_OT_ID, &value);
+ 
+-- 
+2.55.0
+

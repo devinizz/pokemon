@@ -1,0 +1,158 @@
+From 9530ade22fadeec3155d8cb5b4873449ac6ef754 Mon Sep 17 00:00:00 2001
+From: devinizz <p17351988c@live.com>
+Date: Sun, 22 Nov 2026 15:50:03 +0800
+Subject: [PATCH 2/3] trade evolution by using space stone
+
+---
+ .../scripts.inc                               |  2 +-
+ include/constants/items.h                     |  2 +-
+ src/data/item_icon_table.h                    |  2 +-
+ src/data/items.h                              | 14 +++++------
+ src/data/pokemon/item_effects.h               |  5 ++++
+ src/data/text/item_descriptions.h             |  5 ++++
+ src/pokemon.c                                 | 23 ++++++++++++++++---
+ 7 files changed, 40 insertions(+), 13 deletions(-)
+
+diff --git a/data/maps/LilycoveCity_DepartmentStore_3F/scripts.inc b/data/maps/LilycoveCity_DepartmentStore_3F/scripts.inc
+index bc42b293b..8206205f2 100644
+--- a/data/maps/LilycoveCity_DepartmentStore_3F/scripts.inc
++++ b/data/maps/LilycoveCity_DepartmentStore_3F/scripts.inc
+@@ -33,7 +33,7 @@ LilycoveCity_DepartmentStore_3F_EventScript_ClerkRight::
+ 
+ 	.align 2
+ LilycoveCity_DepartmentStore_3F_Pokemart_StatBoosters:
+-	.2byte ITEM_X_SPEED
++	.2byte ITEM_SPACE_STONE
+ 	.2byte ITEM_X_SPECIAL
+ 	.2byte ITEM_X_ATTACK
+ 	.2byte ITEM_X_DEFEND
+diff --git a/include/constants/items.h b/include/constants/items.h
+index aa241fa9e..40f74b6d0 100644
+--- a/include/constants/items.h
++++ b/include/constants/items.h
+@@ -109,7 +109,7 @@ enum {
+     ITEM_THUNDER_STONE,
+     ITEM_WATER_STONE,
+     ITEM_LEAF_STONE,
+-    ITEM_063,
++    ITEM_SPACE_STONE,
+     ITEM_064,
+     ITEM_065,
+     ITEM_066,
+diff --git a/src/data/item_icon_table.h b/src/data/item_icon_table.h
+index 64328f7b1..5b13c88fc 100644
+--- a/src/data/item_icon_table.h
++++ b/src/data/item_icon_table.h
+@@ -111,7 +111,7 @@ const u32 *const gItemIconTable[ITEMS_COUNT + 1][2] =
+     [ITEM_WATER_STONE] = {gItemIcon_WaterStone, gItemIconPalette_WaterStone},
+     [ITEM_LEAF_STONE] = {gItemIcon_LeafStone, gItemIconPalette_LeafStone},
+     // ????????
+-    [ITEM_063] = {gItemIcon_QuestionMark, gItemIconPalette_QuestionMark},
++    [ITEM_SPACE_STONE] = {gItemIcon_MoonStone, gItemIconPalette_MoonStone},
+     [ITEM_064] = {gItemIcon_QuestionMark, gItemIconPalette_QuestionMark},
+     [ITEM_065] = {gItemIcon_QuestionMark, gItemIconPalette_QuestionMark},
+     [ITEM_066] = {gItemIcon_QuestionMark, gItemIconPalette_QuestionMark},
+diff --git a/src/data/items.h b/src/data/items.h
+index 27326e07f..b27770728 100644
+--- a/src/data/items.h
++++ b/src/data/items.h
+@@ -1225,15 +1225,15 @@ const struct Item gItems[] =
+         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
+     },
+ 
+-    [ITEM_063] =
++    [ITEM_SPACE_STONE] =
+     {
+-        .name = _("????????"),
+-        .itemId = ITEM_NONE,
+-        .price = 0,
+-        .description = sDummyDesc,
++        .name = _("SPACE STONE"),
++        .itemId = ITEM_SPACE_STONE,
++        .price = 2100,
++        .description = sSpaceStoneDesc,
+         .pocket = POCKET_ITEMS,
+-        .type = ITEM_USE_BAG_MENU,
+-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
++        .type = ITEM_USE_PARTY_MENU,
++        .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
+     },
+ 
+     [ITEM_064] =
+diff --git a/src/data/pokemon/item_effects.h b/src/data/pokemon/item_effects.h
+index 00872a9b2..f32cb0d12 100644
+--- a/src/data/pokemon/item_effects.h
++++ b/src/data/pokemon/item_effects.h
+@@ -296,6 +296,10 @@ const u8 gItemEffect_LeafStone[6] = {
+     [4] = ITEM4_EVO_STONE,
+ };
+ 
++const u8 gItemEffect_SpaceStone[6] = {
++    [4] = ITEM4_EVO_STONE,
++};
++
+ const u8 gItemEffect_CheriBerry[6] = {
+     [3] = ITEM3_PARALYSIS,
+ };
+@@ -437,6 +441,7 @@ const u8 *const gItemEffectTable[] =
+     [ITEM_THUNDER_STONE - ITEM_POTION] = gItemEffect_ThunderStone,
+     [ITEM_WATER_STONE - ITEM_POTION]   = gItemEffect_WaterStone,
+     [ITEM_LEAF_STONE - ITEM_POTION]    = gItemEffect_LeafStone,
++    [ITEM_SPACE_STONE - ITEM_POTION]   = gItemEffect_SpaceStone,
+     [ITEM_CHERI_BERRY - ITEM_POTION]   = gItemEffect_CheriBerry,
+     [ITEM_CHESTO_BERRY - ITEM_POTION]  = gItemEffect_ChestoBerry,
+     [ITEM_PECHA_BERRY - ITEM_POTION]   = gItemEffect_PechaBerry,
+diff --git a/src/data/text/item_descriptions.h b/src/data/text/item_descriptions.h
+index 5f79efc57..8bf388281 100644
+--- a/src/data/text/item_descriptions.h
++++ b/src/data/text/item_descriptions.h
+@@ -394,6 +394,11 @@ static const u8 sLeafStoneDesc[] = _(
+     "species of POKéMON\n"
+     "evolve.");
+ 
++static const u8 sSpaceStoneDesc[] = _(
++    "Makes certain\n"
++    "species of POKéMON\n"
++    "evolve.");
++
+ // Valuable items
+ static const u8 sTinyMushroomDesc[] = _(
+     "A plain mushroom\n"
+diff --git a/src/pokemon.c b/src/pokemon.c
+index 4b5c19714..150f3cdb0 100644
+--- a/src/pokemon.c
++++ b/src/pokemon.c
+@@ -5607,10 +5607,27 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, u8 mode, u16 evolutionItem)
+     case EVO_MODE_ITEM_CHECK:
+         for (i = 0; i < EVOS_PER_MON; i++)
+         {
+-            if (gEvolutionTable[species][i].method == EVO_ITEM
+-             && gEvolutionTable[species][i].param == evolutionItem)
++            switch (gEvolutionTable[species][i].method)
+             {
+-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
++            case EVO_ITEM:
++                if (gEvolutionTable[species][i].param == evolutionItem)
++                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
++                break;
++            case EVO_TRADE:
++                if (ITEM_SPACE_STONE == evolutionItem)
++                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
++                break;
++            case EVO_TRADE_ITEM:
++                if (ITEM_SPACE_STONE == evolutionItem &&
++                    gEvolutionTable[species][i].param == heldItem)
++                {
++                    if (mode == EVO_MODE_ITEM_USE)
++                    {
++                        heldItem = ITEM_NONE;
++                        SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);
++                    }
++                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
++                }
+                 break;
+             }
+         }
+-- 
+2.55.0
+
